@@ -31,7 +31,21 @@ class SaparDirectoryApp extends Application
             return sprintf('Welcome %s at home', $name);
         });
 
-        $this->get('/dir', 'Cpyree\\Controller\\DirectoryController::listing');
+        $this->get('/dirs', 'Cpyree\\Controller\\DirectoryController::getDirectories');
+        $this->get('/dir-content', 'Cpyree\\Controller\\DirectoryController::getContentDir');
+        $this->get('/dir-genre', 'Cpyree\\Controller\\DirectoryController::getGenreDir');
+        $this->get('/set-matadata', 'Cpyree\\Controller\\DirectoryController::setMetadata');
+        $this->get('/move', 'Cpyree\\Controller\\DirectoryController::move');
+        $this->get('/delete', 'Cpyree\\Controller\\DirectoryController::delete');
+
+        //Security issue, disalow stream on all
+        $this->get('/stream', function(Request $request) {
+            if ($request->query->has('file')) {
+                $stream = new Streamer();
+                return $stream->start($request->query->get('file'));
+            }
+            die();
+        });
 
     }
 
